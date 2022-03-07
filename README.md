@@ -6,5 +6,5 @@
 
 팀원 정해람 : https://github.com/wjdgofka   
 팀원 진현우 : https://github.com/JinHY0101   
-팀원 황석준 : https://github.com/Hwangseokjun97/
+팀원 황석준 : https://github.com/Hwangseokjun97
 
