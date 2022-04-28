@@ -206,7 +206,10 @@ def run(
     if update:
         strip_optimizer(weights)  # update model (to fix SourceChangeWarning)
 
-
+    global cur_list
+    global accurate_item_list
+    cur_list = []
+    accurate_item_list = []
     acc = str(conf)
     acc = acc.replace("tensor(", "")
     acc = acc.replace(")", "")
@@ -219,7 +222,7 @@ def run(
             cur_list.append(cur)
             index.append(int(c))
             # item_num+=1
-            if acc > 0.7:  # 인식된 물품이 정확도가 0.9보다 높다면 acuurate 아이템리스트에 추가 but 인식물품리스트에는 등록됬으나 acuurate리스트에는 등록되지않을수 있음 이를 비교해서 교차 검증
+            if acc > 0.1:  # 인식된 물품이 정확도가 0.9보다 높다면 acuurate 아이템리스트에 추가 but 인식물품리스트에는 등록됬으나 acuurate리스트에는 등록되지않을수 있음 이를 비교해서 교차 검증
                 accurate_item_list.append(cur)
                 # accurate_item_num+=1
 
@@ -227,11 +230,13 @@ def run(
         if acc > 0.1:
             accurate_item_list.append(cur)
             # accurate_item_num+=1
+    accurate_item_list.append(acc)
+    print(accurate_item_list)
 
 def parse_opt():
     parser = argparse.ArgumentParser()
     parser.add_argument('--weights', nargs='+', type=str, default=ROOT / 'runs/train/test22/weights/best.pt', help='model path(s)')
-    parser.add_argument('--source', type=str, default=ROOT / 'bill.jpg', help='file/dir/URL/glob, 0 for webcam')
+    parser.add_argument('--source', type=str, default=ROOT / 'data/images', help='file/dir/URL/glob, 0 for webcam')
     parser.add_argument('--data', type=str, default=ROOT / 'data/coco128.yaml', help='(optional) dataset.yaml path')
     parser.add_argument('--imgsz', '--img', '--img-size', nargs='+', type=int, default=[640], help='inference size h,w')
     parser.add_argument('--conf-thres', type=float, default=0.25, help='confidence threshold')
@@ -265,7 +270,7 @@ def parse_opt():
 def main(opt):
     check_requirements(exclude=('tensorboard', 'thop'))
     run(**vars(opt))
-    return cur_list
+    return accurate_item_list
 
 if __name__ == "__main__":
     opt = parse_opt()
